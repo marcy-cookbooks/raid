@@ -7,6 +7,12 @@
 # All rights reserved - Do Not Redistribute
 #
 
+node[:raid][:devices].each do |dev|
+  mount dev do
+    action :umount
+  end
+end
+
 execute "create raid device" do
   command "mdadm --create --verbose #{node[:raid][:verbose]} --level=#{node[:raid][:level]} --raid-devices=#{node[:raid][:devices].length} #{node[:raid][:devices].join(" ")}"
   action :run
@@ -29,5 +35,6 @@ end
 mount node[:raid][:mount_point] do
   device node[:raid][:verbose]
   fstype node[:raid][:fs]
+  action :mount
 end
 
