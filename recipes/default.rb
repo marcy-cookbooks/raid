@@ -8,8 +8,8 @@
 #
 
 node[:raid][:devices].each do |dev|
-  if node[:filesystem].key?(dev) then
-    mount node[:filesystem][dev][:mount] do
+  if node['filesystem'].key?(dev) then
+    mount node['filesystem'][dev]['mount'] do
       device dev
       action :umount
     end
