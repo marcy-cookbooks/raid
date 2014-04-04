@@ -7,6 +7,10 @@
 # All rights reserved - Do Not Redistribute
 #
 
+package "expect" do
+  action :install
+end
+
 node[:raid][:devices].each do |dev|
   if node[:filesystem].key?(dev) && node[:filesystem][dev].key?('mount') then
     mount node[:filesystem][dev][:mount] do
@@ -14,17 +18,17 @@ node[:raid][:devices].each do |dev|
       action :umount
       only_if {node[:filesystem][dev][:mount] != node[:raid][:mount_point]}
     end
-    execute "format devides" do
-      command "fdformat #{dev}"
-      creates "/tmp/something"
-      action :run
-      only_if {node[:filesystem][dev][:fs_type] != node[:raid][:fs]}
-    end
   end
 end
 
 execute "create raid device" do
-  command "mdadm --create --verbose #{node[:raid][:verbose]} --level=#{node[:raid][:level]} --raid-devices=#{node[:raid][:devices].length} #{node[:raid][:devices].join(" ")}"
+  command <<-EOH
+  expect -c "
+  Continue creating array
+  spawn mdadm --create --verbose #{node[:raid][:verbose]} --level=#{node[:raid][:level]} --raid-devices=#{node[:raid][:devices].length} #{node[:raid][:devices].join(" ")}
+  expect Continue\ creating\ array?; send \"yes\r\"
+  "
+  EOH
   action :run
   not_if { File.exist?(node[:raid][:verbose]) }
 end
