@@ -53,6 +53,6 @@ end
 mount node[:raid][:mount_point] do
   device node[:raid][:verbose]
   fstype node[:raid][:fs]
-  action :mount
+  action [:mount, :enable]
 end
 
