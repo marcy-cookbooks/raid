@@ -23,11 +23,11 @@ end
 
 execute "create raid device" do
   command <<-EOH
-  expect -c "
+  expect -c \"
   Continue creating array
   spawn mdadm --create --verbose #{node[:raid][:verbose]} --level=#{node[:raid][:level]} --raid-devices=#{node[:raid][:devices].length} #{node[:raid][:devices].join(" ")}
-  expect Continue\ creating\ array?; send \"yes\r\"
-  "
+  expect Continue\\ creating\\ array?; send yes\\r
+  \"
   EOH
   action :run
   not_if { File.exist?(node[:raid][:verbose]) }
