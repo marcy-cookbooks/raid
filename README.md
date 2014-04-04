@@ -1,4 +1,4 @@
-raid Cookbook
+RAID Cookbook
 =============
 This cookbook configure RAID and mount the RAID device.
 
@@ -32,7 +32,7 @@ Attributes
     <td><tt>['raid']['devices']</tt></td>
     <td>Array</td>
     <td>RAID devices</td>
-    <td><tt>["/dev/sdb", "/dev/sbc"]</tt></td>
+    <td><tt>["/dev/xvdb", "/dev/xvdc"]</tt></td>
   </tr>
   <tr>
     <td><tt>['raid']['fs']</tt></td>
@@ -74,4 +74,5 @@ Contributing
 
 License and Authors
 -------------------
+License: MIT
 Authors: Marcy
