@@ -36,7 +36,7 @@ end
 execute "make file system" do
   command "mkfs.#{node[:raid][:fs]} #{node[:raid][:verbose]}"
   action :run
-  not_if {
+  only_if {
     node[:filesystem].key?(node[:raid][:verbose]) &&
     node[:filesystem][node[:raid][:verbose]][:fs_type] != node[:raid][:fs]
   }
