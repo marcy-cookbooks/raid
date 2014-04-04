@@ -47,6 +47,7 @@ directory node[:raid][:mount_point] do
   group "root"
   mode "0755"
   action :create
+  recursive true
 end
 
 mount node[:raid][:mount_point] do
