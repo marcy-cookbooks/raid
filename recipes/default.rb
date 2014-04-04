@@ -8,23 +8,18 @@
 #
 
 node[:raid][:devices].each do |dev|
-  mount node[:filesystem][dev][:mount] do
-    device dev
-    action :umount
-    only_if {
-      node[:filesystem].key?(dev) &&
-      node[:filesystem][dev].key?('mount') &&
-      node[:filesystem][dev][:mount] != node[:raid][:mount_point]
-    }
-  end
-  execute "format devides" do
-    command "fdformat #{dev}"
-    creates "/tmp/something"
-    action :run
-    only_if {
-      node[:filesystem].key?(dev) &&
-      node[:filesystem][dev][:fs_type] != node[:raid][:fs]
-    }
+  if node[:filesystem].key?(dev) && node[:filesystem][dev].key?('mount') then
+    mount node[:filesystem][dev][:mount] do
+      device dev
+      action :umount
+      only_if {node[:filesystem][dev][:mount] != node[:raid][:mount_point]}
+    end
+    execute "format devides" do
+      command "fdformat #{dev}"
+      creates "/tmp/something"
+      action :run
+      only_if {node[:filesystem][dev][:fs_type] != node[:raid][:fs]}
+    end
   end
 end
 
