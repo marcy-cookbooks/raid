@@ -28,7 +28,7 @@ execute "create raid device" do
   expect Continue\\ creating\\ array?; send yes; send \\r
   expect eof exit 0
   \"
-  echo \"DEVICE partitions\" >> /etc/mdadm.conf
+  echo \"DEVICE #{node[:raid][:devices].join(" ")}\" >> /etc/mdadm.conf
   mdadm --detail --scan >> /etc/mdadm.conf
   EOH
   action :run
