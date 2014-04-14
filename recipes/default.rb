@@ -25,7 +25,8 @@ execute "create raid device" do
   command <<-EOH
   expect -c \"
   spawn mdadm --create --verbose #{node[:raid][:verbose]} --level=#{node[:raid][:level]} --raid-devices=#{node[:raid][:devices].length} #{node[:raid][:devices].join(" ")}
-  expect Continue\\ creating\\ array?; send yes\\r
+  expect Continue\\ creating\\ array?; send yes; send \\r
+  expect eof exit 0
   \"
   echo \"DEVICE partitions\" >> /etc/mdadm.conf
   mdadm --detail --scan >> /etc/mdadm.conf
