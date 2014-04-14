@@ -27,7 +27,7 @@ execute "create raid device" do
   spawn mdadm --create --verbose #{node[:raid][:verbose]} --level=#{node[:raid][:level]} --raid-devices=#{node[:raid][:devices].length} #{node[:raid][:devices].join(" ")}
   expect Continue\\ creating\\ array?; send yes\\r
   \"
-  echo "DEVICE partitions" >> /etc/mdadm.conf
+  echo \"DEVICE partitions\" >> /etc/mdadm.conf
   mdadm ––detail ––scan >> /etc/mdadm.conf
   EOH
   action :run
