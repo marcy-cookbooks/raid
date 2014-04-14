@@ -28,7 +28,7 @@ execute "create raid device" do
   expect Continue\\ creating\\ array?; send yes\\r
   \"
   echo \"DEVICE partitions\" >> /etc/mdadm.conf
-  mdadm ––detail ––scan >> /etc/mdadm.conf
+  mdadm --detail --scan >> /etc/mdadm.conf
   EOH
   action :run
   not_if { File.exist?(node[:raid][:verbose]) }
