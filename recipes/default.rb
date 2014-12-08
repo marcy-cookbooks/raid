@@ -7,7 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
-package "expect" do
+package "xfsprogs" do
   action :install
 end
 
@@ -21,28 +21,11 @@ node[:raid][:devices].each do |dev|
   end
 end
 
-execute "create raid device" do
-  command <<-EOH
-  expect -c \"
-  spawn mdadm --create --verbose #{node[:raid][:verbose]} --level=#{node[:raid][:level]} --raid-devices=#{node[:raid][:devices].length} #{node[:raid][:devices].join(" ")}
-  expect Continue\\ creating\\ array?; send yes; send \\r
-  expect eof exit 0
-  \"
-  echo \"DEVICE #{node[:raid][:devices].join(" ")}\" >> /etc/mdadm.conf
-  mdadm --detail --scan >> /etc/mdadm.conf
-  EOH
-  action :run
-  not_if { File.exist?(node[:raid][:verbose]) }
-end
 
-execute "make file system" do
-  command "mkfs.#{node[:raid][:fs]} #{node[:raid][:verbose]}"
-  action :run
-  only_if {
-    !node[:filesystem].key?(node[:raid][:verbose]) ||
-    node[:filesystem].key?(node[:raid][:verbose]) &&
-    node[:filesystem][node[:raid][:verbose]][:fs_type] != node[:raid][:fs]
-  }
+mdadm default['raid']['verbose'] do
+  devices node['raid']['devices']
+  level node['raid']['level']
+  action [ :create, :assemble ]
 end
 
 directory node[:raid][:mount_point] do
