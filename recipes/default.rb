@@ -22,7 +22,7 @@ node[:raid][:devices].each do |dev|
 end
 
 execute "format-device" do
-  command "mkfs.#{node[:raid][:fs]} #{node[:raid][:verbose]}"
+  command "mkfs.#{node[:raid][:fs]} -f #{node[:raid][:verbose]}"
   action :nothing
 end
 
@@ -46,4 +46,3 @@ mount node[:raid][:mount_point] do
   fstype node[:raid][:fs]
   action [ :mount, :enable ]
 end
-
