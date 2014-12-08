@@ -26,7 +26,7 @@ execute "format-device" do
   action :nothing
 end
 
-mdadm default['raid']['verbose'] do
+mdadm node['raid']['verbose'] do
   devices node['raid']['devices']
   level node['raid']['level']
   action [ :create, :assemble ]
