@@ -14,7 +14,7 @@ node[:raid][:devices].each do |dev|
   if node[:filesystem].key?(dev) && node[:filesystem][dev].key?('mount') then
     mount node[:filesystem][dev][:mount] do
       device dev
-      action :umount
+      action [:umount, :disable]
       only_if {node[:filesystem][dev][:mount] != node[:raid][:mount_point]}
     end
   end
@@ -49,5 +49,5 @@ mount node[:raid][:mount_point] do
   device node[:raid][:verbose]
   fstype node[:raid][:fs]
   options "defaults,noatime,nofail"
-  action [ :mount, :enable ]
+  action [:mount, :enable]
 end
